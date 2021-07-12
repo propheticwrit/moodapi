@@ -70,7 +70,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mood',
-        'USER': 'postgres',
+        'USER': 'mood_admin',
         'PASSWORD': 'Bl@ckb00k',
         'HOST': 'localhost',
     }
