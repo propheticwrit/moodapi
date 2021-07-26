@@ -4,6 +4,7 @@ from django.db import models
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, null=False, default='')
     parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     created = models.DateTimeField(null=False, auto_now_add=True)
     modified = models.DateTimeField(null=False, auto_now=True)
@@ -11,6 +12,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
+        db_table = 'category'
 
     def __unicode__(self):
         return str(self.id)
@@ -26,6 +28,7 @@ class Observation(models.Model):
     class Meta:
         verbose_name = "Observation"
         verbose_name_plural = "Observations"
+        db_table = 'observation'
 
     def __unicode__(self):
         return str(self.id)
@@ -36,6 +39,7 @@ class Observation(models.Model):
 
 class Survey(models.Model):
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, null=False, default='')
     created = models.DateTimeField(null=False, auto_now_add=True)
     modified = models.DateTimeField(null=False, auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -43,6 +47,7 @@ class Survey(models.Model):
     class Meta:
         verbose_name = "Survey"
         verbose_name_plural = "Surveys"
+        db_table = 'survey'
 
     def __unicode__(self):
         return str(self.id)
@@ -53,13 +58,17 @@ class Survey(models.Model):
 
 class Question(models.Model):
     id = models.AutoField(primary_key=True)
-    survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, null=False, default='')
     text = models.CharField(max_length=255, null=False, default='')
+    created = models.DateTimeField(null=False, auto_now_add=True)
+    modified = models.DateTimeField(null=False, auto_now=True)
+    survey = models.ForeignKey(Survey, related_name='questions', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Question"
         verbose_name_plural = "Questions"
+        db_table = 'question'
+        ordering = ['id']
 
     def __unicode__(self):
         return str(self.id)
@@ -68,16 +77,14 @@ class Question(models.Model):
         return str(self.id)
 
 
-class QuestionAnswerChoice(models.Model):
-    id = models.AutoField(primary_key=True)
+class UserQuestion(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    label = models.CharField(max_length=150, null=False, default='')
-    response_code = models.CharField(max_length=100, null=False, default='')
-    sequence = models.IntegerField(default=-1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = "QuestionAnswerChoice"
-        verbose_name_plural = "QuestionAnswerChoices"
+        verbose_name = "Observation"
+        verbose_name_plural = "Observations"
+        db_table = 'user_question'
 
     def __unicode__(self):
         return str(self.id)
@@ -88,14 +95,31 @@ class QuestionAnswerChoice(models.Model):
 
 class Answer(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50, null=False, default='')
-    regex = models.CharField(max_length=100, null=False, default='')
-    next_question = models.ForeignKey(Question, on_delete=models.SET_NULL, null=True, blank=True, related_name='next_question')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question')
+    label = models.CharField(max_length=150, null=True)
+    text = models.CharField(max_length=100, null=True)
+    sequence = models.IntegerField(default=-1)
+    question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
+
+    STYLES = (
+        ('txt', 'Text'),
+        ('tbt', 'ToggleButton'),
+        ('dte', 'Date'),
+        ('swh', 'Switch'),
+    )
+
+    style = models.CharField(
+        max_length=3,
+        choices=STYLES,
+        blank=True,
+        default='txt',
+        help_text='styles',
+    )
 
     class Meta:
         verbose_name = "Answer"
         verbose_name_plural = "Answers"
+        db_table = 'answer'
+        ordering = ['sequence']
 
     def __unicode__(self):
         return str(self.id)
@@ -115,6 +139,7 @@ class Report(models.Model):
     class Meta:
         verbose_name = "Report"
         verbose_name_plural = "Reports"
+        db_table = 'report'
 
     def __unicode__(self):
         return str(self.id)
@@ -134,6 +159,7 @@ class Response(models.Model):
     class Meta:
         verbose_name = "Response"
         verbose_name_plural = "Responses"
+        db_table = 'response'
 
     def __unicode__(self):
         return str(self.id)
