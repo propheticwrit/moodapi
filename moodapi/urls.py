@@ -4,11 +4,13 @@ from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 
 from api.views.category import CategoryViewSet
+from api.views.question import QuestionViewSet
 from api.views.survey import SurveyViewSet
 
 router = routers.SimpleRouter(trailing_slash=False)
 router.register(r'category', CategoryViewSet, 'Category')
 router.register(r'survey', SurveyViewSet, 'Survey')
+router.register(r'question', QuestionViewSet, 'Question')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
