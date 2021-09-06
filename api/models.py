@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
 from django.db import models
+
+from authentication.models import User
 
 
 class Category(models.Model):
@@ -8,6 +9,7 @@ class Category(models.Model):
     parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     created = models.DateTimeField(null=False, auto_now_add=True)
     modified = models.DateTimeField(null=False, auto_now=True)
+    user = models.ManyToManyField(User)
 
     class Meta:
         verbose_name = "Category"
@@ -43,6 +45,7 @@ class Survey(models.Model):
     created = models.DateTimeField(null=False, auto_now_add=True)
     modified = models.DateTimeField(null=False, auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    user = models.ManyToManyField(User)
 
     class Meta:
         verbose_name = "Survey"
@@ -63,6 +66,7 @@ class Question(models.Model):
     created = models.DateTimeField(null=False, auto_now_add=True)
     modified = models.DateTimeField(null=False, auto_now=True)
     survey = models.ForeignKey(Survey, related_name='questions', on_delete=models.CASCADE)
+    user = models.ManyToManyField(User)
 
     class Meta:
         verbose_name = "Question"
@@ -77,28 +81,13 @@ class Question(models.Model):
         return str(self.id)
 
 
-class UserQuestion(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "Observation"
-        verbose_name_plural = "Observations"
-        db_table = 'user_question'
-
-    def __unicode__(self):
-        return str(self.id)
-
-    def __str__(self):
-        return str(self.id)
-
-
 class Answer(models.Model):
     id = models.AutoField(primary_key=True)
     label = models.CharField(max_length=150, null=True)
     text = models.CharField(max_length=100, null=True)
     sequence = models.IntegerField(default=-1)
     question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
+    user = models.ManyToManyField(User)
 
     STYLES = (
         ('txt', 'Text'),
