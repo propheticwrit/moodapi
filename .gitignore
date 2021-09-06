@@ -4,3 +4,5 @@ venv/
 *.sqlite3
 log/
 api/migrations/
+social_auth/migrations/
+authentication/migrations/
