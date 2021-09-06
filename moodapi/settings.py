@@ -1,4 +1,6 @@
 from pathlib import Path
+import os
+import datetime
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,9 +17,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api',
     'rest_framework',
-    'rest_framework.authtoken',
+    'authentication',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -32,11 +34,13 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-               'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES':(
-                'rest_framework.permissions.IsAuthenticated',
-    ),
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }
 
 ROOT_URLCONF = 'moodapi.urls'
@@ -44,8 +48,7 @@ ROOT_URLCONF = 'moodapi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -62,19 +65,15 @@ WSGI_APPLICATION = 'moodapi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-DATABASES = {
-    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mood',
-        'USER': 'mood_admin',
+        'NAME': 'mood_auth',
+        'USER': 'postgres',
         'PASSWORD': 'Bl@ckb00k',
         'HOST': 'localhost',
     }
 }
+
+AUTH_USER_MODEL = 'authentication.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -104,3 +103,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+FIXTURE_DIRS = [BASE_DIR / 'fixture']
+
+SOCIAL_SECRET = 'aKdef123#P&'
