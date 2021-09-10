@@ -8,3 +8,4 @@ class QuestionViewSet(ModelViewSet):
 
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
+    filterset_fields = ['survey', 'user']

@@ -8,3 +8,4 @@ class SurveyViewSet(ModelViewSet):
 
     serializer_class = SurveySerializer
     queryset = Survey.objects.all()
+    filterset_fields = ['category', 'user']
