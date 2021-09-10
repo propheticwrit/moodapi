@@ -8,3 +8,4 @@ class CategoryViewSet(ModelViewSet):
 
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+    filterset_fields = ['user']
