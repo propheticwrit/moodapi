@@ -1,4 +1,4 @@
-
+from authentication.models import User
 
 
 class APIMixin():
@@ -7,9 +7,14 @@ class APIMixin():
 
         queryset = self.queryset
 
-        params = self.request.query_params
-
-        if 'subject' in params:
-            queryset = queryset.filter(user__subject=params['subject'])
+        if self.request.user:
+            queryset = queryset.filter(user=self.request.user)
 
         return queryset
+
+    def create(self, request, *args, **kwargs):
+
+        if request.user:
+            request.data['user'] = [request.user.id]
+
+        return super().create(request, args, kwargs)
