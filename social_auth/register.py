@@ -42,6 +42,7 @@ def register_social_user(provider, user_id, email, name):
         user = User.objects.create_user(**user)
         user.is_verified = True
         user.auth_provider = provider
+        user.subject = user_id
         user.save()
 
         new_user = authenticate(
