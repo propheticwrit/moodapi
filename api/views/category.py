@@ -24,7 +24,7 @@ class CategoryViewSet(APIMixin, ModelViewSet):
 
         base_categories = []
         for null_parent in null_parents:
-            null_parent_dict = {null_parent.name: self.serializer_class(null_parent).data, 'children': []}
+            null_parent_dict = {'parent': self.serializer_class(null_parent).data, 'children': []}
             for null_child in null_children.filter(parent_id=null_parent.id):
                 null_parent_dict['children'].append(self.serializer_class(null_child).data)
             base_categories.append(null_parent_dict)
