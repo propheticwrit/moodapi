@@ -23,7 +23,7 @@ sudo apt-get update
 sudo apt-get install postgresql postgresql-contrib
 
 CREATE DATABASE mood;
-CREATE USER mood_admin WITH password 'Bl@ckb00k';
+CREATE USER mood_admin WITH password '';
 GRANT ALL PRIVILEGES ON DATABASE mood TO mood_admin;
 ALTER ROLE mood_admin SET client_encoding TO 'utf8';
 ALTER ROLE mood_admin SET default_transaction_isolation TO 'read committed';
