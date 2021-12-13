@@ -27,6 +27,7 @@ def register_social_user(provider, user_id, email, name):
                 email=email, password=settings.SOCIAL_SECRET)
 
             return {
+                'id': filtered_user_by_email[0].id,
                 'username': registered_user.username,
                 'email': registered_user.email,
                 'tokens': registered_user.tokens()}

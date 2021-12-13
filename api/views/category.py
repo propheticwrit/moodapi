@@ -13,6 +13,15 @@ class CategoryViewSet(APIMixin, ModelViewSet):
     queryset = Category.objects.all().order_by('parent_id')
     filterset_fields = ['user', 'parent_id']
 
+    def get_queryset(self):
+
+        queryset = self.queryset
+
+        if self.request.user:
+            queryset = queryset.filter(user=self.request.user)
+
+        return queryset
+
     @action(detail=False, url_path='base')
     def base_categories(self, request):
 
