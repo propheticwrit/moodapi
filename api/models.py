@@ -74,7 +74,7 @@ class InputType(models.Model):
     class Meta:
         verbose_name = "InputType"
         verbose_name_plural = "InputTypes"
-        db_table = 'input_types'
+        db_table = 'input_type'
 
     def __unicode__(self):
         return str(self.id)

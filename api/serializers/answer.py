@@ -6,8 +6,8 @@ from api.serializers.input_type import InputTypeSerializer
 
 class AnswerSerializer(ModelSerializer):
 
-    input_types = InputTypeSerializer(many=True, read_only=True)
+    input_type = InputTypeSerializer(read_only=True)
 
     class Meta:
         model = Answer
-        fields = ['id', 'name', 'label', 'initial_value', 'validation', 'sequence', 'created', 'modified', 'question', 'user', 'input_types']
+        fields = ['id', 'name', 'label', 'initial_value', 'validation', 'sequence', 'created', 'modified', 'question', 'user', 'input_type']
